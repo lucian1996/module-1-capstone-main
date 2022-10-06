@@ -66,9 +66,10 @@ public class VendingMachine {
     public static void takeOrder() {
         Scanner scanOrder = new Scanner(System.in);
         System.out.println("Enter Product Code: ");
-        String userProductCode = scanOrder.nextLine();
-        if (userProductCode == VendingMachine.getData(itemList.contains(userProductCode)));
-        System.out.println(userProductCode);
+        String orderCode = scanOrder.nextLine();
+        if (orderCode == VendingMachine.printStock().contains(orderCode)){
+            System.out.println(orderCode);
+        }
     }
 
 
