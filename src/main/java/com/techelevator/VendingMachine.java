@@ -10,9 +10,9 @@ public class VendingMachine {
     private static List<Products> itemList = new ArrayList<>();
 
 
-    public static void main(String[] args) {
-        getData();
-    }
+//    public static void main(String[] args) {
+//        getData();
+//    }
 
     //get data from VendingMachine.csv
     public static void getData() {
@@ -25,8 +25,8 @@ public class VendingMachine {
                 String temp[] = line.split("\\|");
                 //temp[0] = itemCode temp[1] = productName, temp[2] = price
 
-                int priceInPenny = (int)(Double.parseDouble(temp[2])*100);
-                itemList.add(new Products(temp[0], temp[1], priceInPenny,5));
+                int priceInPenny = (int) (Double.parseDouble(temp[2]) * 100);
+                itemList.add(new Products(temp[0], temp[1], priceInPenny, 5));
 //                finalString = temp[0] + temp[1] + temp[2];
             }
 //            for(Products each: itemList) {
@@ -36,10 +36,26 @@ public class VendingMachine {
             System.out.println("Cannot open the file.");
         }
     }
-    public static void printStock(){
-        System.out.println(itemList.get(0));
+
+    public static void printStock() {
+        for (int i = 0; i < itemList.size(); i++) {
+            // A1 | product name | price || "SOLD OUT" if out of stock.
+            if (itemList.get(i).getItemStock() == 0) {
+                System.out.println("SOLD OUT");
+            } else {
+                String itemCode = itemList.get(i).getItemCode();
+                String productName = itemList.get(i).getProductName();
+                int dollar = itemList.get(i).getPrice() / 100;
+                int penny = itemList.get(i).getPrice() % 100;
+                //work on spacing for better look?
+                System.out.printf("%s | %s | $ %s.%s%n", itemCode, productName, dollar, penny);
+            }
+        }
+
+
     }
-    public static void updateStock(){
+
+    public static void updateStock() {
 
     }
 }
