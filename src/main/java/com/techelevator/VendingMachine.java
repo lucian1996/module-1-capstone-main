@@ -51,11 +51,28 @@ public class VendingMachine {
                 System.out.printf("%s | %s | $ %s.%s%n", itemCode, productName, dollar, penny);
             }
         }
-
-
     }
 
-    public static void updateStock() {
+    public static void takeMoney() {
+        double currentMoneyProvided = 0;
+        Scanner scanMoney = new Scanner(System.in);
+        System.out.println("Enter dollar bills please: ");
+        String stringDollar = scanMoney.nextLine();
+        double centsDollar = Double.parseDouble(stringDollar);
+        currentMoneyProvided += centsDollar;
+        System.out.println(currentMoneyProvided);
+    }
+
+    public static void takeOrder() {
+        Scanner scanOrder = new Scanner(System.in);
+        System.out.println("Enter Product Code: ");
+        String userProductCode = scanOrder.nextLine();
+        if (userProductCode == VendingMachine.getData(itemList.contains(userProductCode)));
+        System.out.println(userProductCode);
+    }
+
+
+        public static void updateStock() {
 
     }
 }
