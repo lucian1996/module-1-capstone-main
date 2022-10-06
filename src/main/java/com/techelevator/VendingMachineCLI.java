@@ -22,8 +22,8 @@ public class VendingMachineCLI {
 
 	public void run() {
 
-		/*
-		  ===== you nay use/modify the existing Menu class or write your own ======
+
+		  //===== you nay use/modify the existing Menu class or write your own ======
 		while (true) {
 			String choice = (String) menu.getChoiceFromOptions(MAIN_MENU_OPTIONS);
 
@@ -33,7 +33,7 @@ public class VendingMachineCLI {
 				// do purchase
 			}
 		}
-		 */
+
 	}
 
 }
