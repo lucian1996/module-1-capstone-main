@@ -52,11 +52,13 @@ public class VendingMachineCLI {
                     if (purchaseChoice.equals(PURCHASING_MENU_FEED_MONEY)) {
                         System.out.print("Enter dollar bills please: ");
                         vendingMachine.takeMoney();
+                        vendingMachine.logger("FEED MONEY");
                         //call log method
                     } else if (purchaseChoice.equals(PURCHASING_MENU_SELECT_PRODUCT)) {
                         printStock(vendingMachine);
                         System.out.print("Enter Item Code: ");
                         vendingMachine.purchaseItem();
+                        vendingMachine.logger("ITEM CODE");
                         //call log method
                         System.out.println();
                         String printMessage = "";
@@ -74,6 +76,7 @@ public class VendingMachineCLI {
                             System.out.println("Insufficient Fund");
                         }
                     } else if (purchaseChoice.equals(PURCHASING_MENU_FINALISE_TRANSACTION)) {
+                        vendingMachine.logger("GIVE CHANGE");
                         //call log method
                         for (int i = 0; i < vendingMachine.finishTransaction().get(0); i++) {
                             System.out.println("QUARTER!");

@@ -1,8 +1,7 @@
 package com.techelevator;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
+import java.io.*;
+import java.text.Format;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -17,6 +16,7 @@ public class VendingMachine {
     private String userItemCode;
     private List<Integer> changes = new ArrayList<>();
     private boolean isPurchasable;
+    private String stringDollar;
 
 
     //get data from VendingMachine.csv
@@ -38,7 +38,7 @@ public class VendingMachine {
 
     public void takeMoney() {
         Scanner scanMoney = new Scanner(System.in);
-        String stringDollar = scanMoney.nextLine();
+        stringDollar = scanMoney.nextLine();
         balance.setCurrentBalance(balance.getCurrentBalance() + dollarStringToInt(stringDollar));
     }
 
@@ -70,30 +70,32 @@ public class VendingMachine {
         return changes;
     }
 
-    public void logger() {
 
+    public void logger(String action) {
         String path = "Log.txt";
         File logFile = new File(path);
 
+        try (PrintWriter logOutput = new PrintWriter(new FileWriter("Log.txt", true)))
 
-        try (Scanner dataInput = new Scanner(logFile); PrintWriter logOutput = new PrintWriter(logFile)) {
+
+        {
             LocalTime localTime = LocalTime.now();
             DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("hh:mm:ss a");
             //date     time    AM/PM    Feed money/item+item code/Give change    price/transaction     total balance
             String date = String.valueOf(LocalDate.now());
             String time = String.valueOf(localTime.format(dateTimeFormatter));
-
-
-
+            if (action.equals("FEED MONEY")) {
+                logOutput.append(String.format("%s %s %s $%s $%s%n", date, time, action, dollarIntToString(dollarStringToInt(stringDollar)), dollarIntToString(balance.getCurrentBalance())));
+            } else if (action.equals("ITEM CODE")){
+                logOutput.append(String.format("%s %s %s %s $%s $%s%n", date, time, productsForSale.get(userItemCode).getProductName(), userItemCode, dollarIntToString(productsForSale.get(userItemCode).getPrice()), dollarIntToString(balance.getCurrentBalance())));
+            } else if (action.equals("GIVE CHANGE")){
+                logOutput.append(String.format("%s %s %s $%s $%s%n", date, time, action, dollarIntToString(balance.getCurrentBalance()), dollarIntToString(dollarStringToInt("0"))));
+            }
         } catch (FileNotFoundException e) {
             System.err.println("Cannot open the file for writing.");
-        }
-
-
-
+        } catch (IOException e) {
+            System.err.println("file not found.");        }
     }
-
-
 
 
 
