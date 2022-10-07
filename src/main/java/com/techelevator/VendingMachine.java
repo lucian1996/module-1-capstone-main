@@ -2,14 +2,14 @@ package com.techelevator;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class VendingMachine {
     private static List<Products> itemList = new ArrayList<>();
     private int currentMoneyProvided = 0;
     private static Balance balance = new Balance();
+    private static Map<String, Products> productsForSale = new HashMap<>();
+
 //    public static void main(String[] args) {
 //        getData();
 //    }
@@ -27,9 +27,8 @@ public class VendingMachine {
 
                 int priceInPenny = (int) (Double.parseDouble(temp[2]) * 100);
                 itemList.add(new Products(temp[0], temp[1], priceInPenny, 5));
-
-
-
+                productsForSale.put(temp[0], new Products(temp[0], temp[1], priceInPenny, 5));
+                ;
                 //
                 //create a map, assign temp[0] to key, itemList(or Products class) as value.
                 //
@@ -38,6 +37,8 @@ public class VendingMachine {
                 
 //                finalString = temp[0] + temp[1] + temp[2];
             }
+            System.out.println(productsForSale.keySet());
+            System.out.println(productsForSale.get("A1").getProductName());
 //            for(Products each: itemList) {
 //                System.out.println(finalString);
 //            }
@@ -70,7 +71,7 @@ public class VendingMachine {
         Scanner scanMoney = new Scanner(System.in);
         System.out.print("Enter dollar bills please: ");
         String stringDollar = scanMoney.nextLine();
-        balance.setCurrentBalance(dollarStringToInt(stringDollar));
+        balance.setCurrentBalance(balance.getCurrentBalance() + dollarStringToInt(stringDollar));
     }
 
     public static int currentBalanceAsStr() {
@@ -78,20 +79,7 @@ public class VendingMachine {
         return balance.getCurrentBalance();
     }
 
-//           key      value
-//    Map <itemCode, Products>
-//    public static void takeOrder() {
-//        Scanner scanOrder = new Scanner(System.in);
-//        System.out.println("Enter Product Code: ");  key
-//        String orderCode = scanOrder.nextLine();
-//        if (orderCode == VendingMachine.printStock().contains(orderCode)){
-//            System.out.println(orderCode);
-//        }
-//    }
-
-
         public static void updateStock() {
-
     }
 
     public static String dollarIntToString(int dollarInInteger) {
@@ -112,8 +100,17 @@ public class VendingMachine {
         } else {
             return Integer.parseInt(dollarInString) * 100;
         }
-
-
-
     }
-}
+
+    public static void purchaseItem() {
+                Scanner purchaseScan = new Scanner(System.in);
+                System.out.print("Enter Item Code: ");
+                String purchaseItemCode = purchaseScan.nextLine();
+                if (!(productsForSale.get(purchaseItemCode).getItemStock() == 0)) {
+                    if (balance.getCurrentBalance() >= productsForSale.get(purchaseItemCode).getPrice()) {
+                        balance.setCurrentBalance(balance.getCurrentBalance() - productsForSale.get(purchaseItemCode).getPrice());
+                        productsForSale.get(purchaseItemCode).setItemStock(productsForSale.get(purchaseItemCode).getItemStock() - 1);
+                    }
+                }
+        }
+    }

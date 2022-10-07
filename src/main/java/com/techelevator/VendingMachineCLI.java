@@ -44,11 +44,11 @@ public class VendingMachineCLI {
 
                     String purchaseChoice = (String) menu.getChoiceFromOptions(PURCHASING_MENU_OPTIONS);
 
-
                     if (purchaseChoice.equals(PURCHASING_MENU_FEED_MONEY)) {
                         VendingMachine.takeMoney();
                     } else if (purchaseChoice.equals(PURCHASING_MENU_SELECT_PRODUCT)) {
-                        VendingMachine.printStock();
+                            VendingMachine.printStock();
+                            VendingMachine.purchaseItem();
                         //VendingMachine.takeOrder();
                     } else if (purchaseChoice.equals(PURCHASING_MENU_FINALISE_TRANSACTION)) {
                     }

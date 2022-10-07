@@ -9,6 +9,6 @@ public class Balance {
     }
 
     public void setCurrentBalance(int currentBalance) {
-        this.currentBalance += currentBalance;
+        this.currentBalance = currentBalance;
     }
 }
