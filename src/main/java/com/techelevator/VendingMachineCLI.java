@@ -52,23 +52,42 @@ public class VendingMachineCLI {
                     if (purchaseChoice.equals(PURCHASING_MENU_FEED_MONEY)) {
                         System.out.print("Enter dollar bills please: ");
                         vendingMachine.takeMoney();
+                        //call log method
                     } else if (purchaseChoice.equals(PURCHASING_MENU_SELECT_PRODUCT)) {
                         printStock(vendingMachine);
                         System.out.print("Enter Item Code: ");
                         vendingMachine.purchaseItem();
+                        //call log method
                         System.out.println();
                         String printMessage = "";
-                        if (vendingMachine.getProductsForSale().get(vendingMachine.getUserItemCode()).getCategory().equals("Chip")) {
-                            System.out.println("Crunch Crunch, Yum!");
-                        } else if (vendingMachine.getProductsForSale().get(vendingMachine.getUserItemCode()).getCategory().equals("Candy")) {
-                            System.out.println("Munch Munch, Yum!");
-                        } else if (vendingMachine.getProductsForSale().get(vendingMachine.getUserItemCode()).getCategory().equals("Drink")) {
-                            System.out.println("Glug Glug, Yum!");
-                        } else if (vendingMachine.getProductsForSale().get(vendingMachine.getUserItemCode()).getCategory().equals("Gum")) {
-                            System.out.println("Chew Chew, Yum!");
+                        if (vendingMachine.isPurchasable()){
+                            if (vendingMachine.getProductsForSale().get(vendingMachine.getUserItemCode()).getCategory().equals("Chip")) {
+                                System.out.println("Crunch Crunch, Yum!");
+                            } else if (vendingMachine.getProductsForSale().get(vendingMachine.getUserItemCode()).getCategory().equals("Candy")) {
+                                System.out.println("Munch Munch, Yum!");
+                            } else if (vendingMachine.getProductsForSale().get(vendingMachine.getUserItemCode()).getCategory().equals("Drink")) {
+                                System.out.println("Glug Glug, Yum!");
+                            } else if (vendingMachine.getProductsForSale().get(vendingMachine.getUserItemCode()).getCategory().equals("Gum")) {
+                                System.out.println("Chew Chew, Yum!");
+                            }
+                        } else {
+                            System.out.println("Insufficient Fund");
                         }
                     } else if (purchaseChoice.equals(PURCHASING_MENU_FINALISE_TRANSACTION)) {
-                        vendingMachine.finishTransaction();
+                        //call log method
+                        for (int i = 0; i < vendingMachine.finishTransaction().get(0); i++) {
+                            System.out.println("QUARTER!");
+                        }
+                        for (int i = 0; i < vendingMachine.finishTransaction().get(1); i++) {
+                            System.out.println("DIME!");
+                        }
+                        for (int i = 0; i < vendingMachine.finishTransaction().get(2); i++) {
+                            System.out.println("NICKEL!");
+                        }
+                        for (int i = 0; i < vendingMachine.finishTransaction().get(3); i++) {
+                            System.out.println("PENNY!");
+                        }
+                        break;
                     }
                 }
             } else if (choice.equals(MAIN_MENU_OPTION_EXIT)) {
@@ -86,7 +105,7 @@ public class VendingMachineCLI {
             if (products.getItemStock() == 0) {
                 System.out.println("SOLD OUT");
             } else {
-                System.out.printf("%s | %s | $ %s%n", key, products.getProductName(), vendingMachine.dollarIntToString(products.getPrice()));
+                System.out.printf("%s | %-20s | $ %s%n", key, products.getProductName(), vendingMachine.dollarIntToString(products.getPrice()));
             }
         }
     }
