@@ -18,9 +18,9 @@ public class VendingMachineCLI {
     private static final String PURCHASING_MENU_SELECT_PRODUCT = "Select Product";
     private static final String PURCHASING_MENU_FINALISE_TRANSACTION = "Finish Transaction";
     private static final String[] PURCHASING_MENU_OPTIONS = {PURCHASING_MENU_FEED_MONEY, PURCHASING_MENU_SELECT_PRODUCT, PURCHASING_MENU_FINALISE_TRANSACTION};
-
-
+    private VendingMachine vendingMachine = new VendingMachine();
     private Menu menu;
+
 
     public static void main(String[] args) {
         Menu menu = new Menu(System.in, System.out);
@@ -34,7 +34,6 @@ public class VendingMachineCLI {
 
     public void run() {
         File inputFile = new File("VendingMachine.csv");
-        VendingMachine vendingMachine = new VendingMachine();
         try (Scanner fileScanner = new Scanner(inputFile)) {
             vendingMachine.getData(fileScanner);
         } catch (FileNotFoundException e) {
@@ -43,39 +42,52 @@ public class VendingMachineCLI {
 
         while (true) {
             String choice = (String) menu.getChoiceFromOptions(MAIN_MENU_OPTIONS);
-
-
             if (choice.equals(MAIN_MENU_OPTION_DISPLAY_ITEMS)) {
-                vendingMachine.printStock();
-
-                if (vendingMachine.printStock() == 0) {
-                    System.out.println("SOLD OUT");
-                } else {
-                    System.out.printf("%s | %s | $ %s%n", key, products.getProductName(), dollarIntToString(products.getPrice()));
-                }
-
+                vendingMachine.getItemCodeList();
+                printStock(vendingMachine);
             } else if (choice.equals(MAIN_MENU_OPTION_PURCHASE)) {
                 while (true) {
                     System.out.printf("%nCurrent Money Provided: $ %s%n", vendingMachine.dollarIntToString(vendingMachine.currentBalanceAsStr()));
-
                     String purchaseChoice = (String) menu.getChoiceFromOptions(PURCHASING_MENU_OPTIONS);
-
                     if (purchaseChoice.equals(PURCHASING_MENU_FEED_MONEY)) {
+                        System.out.print("Enter dollar bills please: ");
                         vendingMachine.takeMoney();
                     } else if (purchaseChoice.equals(PURCHASING_MENU_SELECT_PRODUCT)) {
-                        vendingMachine.printStock();
+                        printStock(vendingMachine);
+                        System.out.print("Enter Item Code: ");
                         vendingMachine.purchaseItem();
-                        //VendingMachine.takeOrder();
+                        System.out.println();
+                        String printMessage = "";
+                        if (vendingMachine.getProductsForSale().get(vendingMachine.getUserItemCode()).getCategory().equals("Chip")) {
+                            System.out.println("Crunch Crunch, Yum!");
+                        } else if (vendingMachine.getProductsForSale().get(vendingMachine.getUserItemCode()).getCategory().equals("Candy")) {
+                            System.out.println("Munch Munch, Yum!");
+                        } else if (vendingMachine.getProductsForSale().get(vendingMachine.getUserItemCode()).getCategory().equals("Drink")) {
+                            System.out.println("Glug Glug, Yum!");
+                        } else if (vendingMachine.getProductsForSale().get(vendingMachine.getUserItemCode()).getCategory().equals("Gum")) {
+                            System.out.println("Chew Chew, Yum!");
+                        }
                     } else if (purchaseChoice.equals(PURCHASING_MENU_FINALISE_TRANSACTION)) {
                         vendingMachine.finishTransaction();
-
                     }
                 }
             } else if (choice.equals(MAIN_MENU_OPTION_EXIT)) {
                 // exit method
             }
         }
-
     }
 
+    public static void printStock(VendingMachine vendingMachine) {
+        for (int i = 0; i < vendingMachine.getItemCodeList().size(); i++) {
+            // A1 | product name | price || "SOLD OUT" if out of stock.
+            String key = vendingMachine.getItemCodeList().get(i);
+            Products products = vendingMachine.getProductsForSale().get(key);
+
+            if (products.getItemStock() == 0) {
+                System.out.println("SOLD OUT");
+            } else {
+                System.out.printf("%s | %s | $ %s%n", key, products.getProductName(), vendingMachine.dollarIntToString(products.getPrice()));
+            }
+        }
+    }
 }

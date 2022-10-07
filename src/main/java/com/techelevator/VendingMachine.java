@@ -9,6 +9,7 @@ public class VendingMachine {
     private int currentMoneyProvided = 0;
     private Balance balance = new Balance();
     private Map<String, Products> productsForSale = new HashMap<>();
+    private String userItemCode;
 
     //get data from VendingMachine.csv
     public void getData(Scanner fileScanner) {
@@ -27,59 +28,17 @@ public class VendingMachine {
         balance.setCurrentBalance(0);
     }
 
-    public void printStock() {
-        for (int i = 0; i < itemCodeList.size(); i++) {
-            // A1 | product name | price || "SOLD OUT" if out of stock.
-            String key = itemCodeList.get(i);
-            Products products = productsForSale.get(key);
-
-            if (products.getItemStock() == 0) {
-                System.out.println("SOLD OUT");
-            } else {
-                System.out.printf("%s | %s | $ %s%n", key, products.getProductName(), dollarIntToString(products.getPrice()));
-            }
-        }
-    }
-
     public void takeMoney() {
         Scanner scanMoney = new Scanner(System.in);
-        System.out.print("Enter dollar bills please: ");
         String stringDollar = scanMoney.nextLine();
         balance.setCurrentBalance(balance.getCurrentBalance() + dollarStringToInt(stringDollar));
     }
 
-    public int currentBalanceAsStr() {
-
-        return balance.getCurrentBalance();
-    }
-
-        public static void updateStock() {
-    }
-
-    public String dollarIntToString(int dollarInInteger) {
-        int dollar = dollarInInteger / 100;
-        int penny = dollarInInteger % 100;  //1650 / 100 ->50 "0"
-
-        return penny == 0 ? dollar + ".00" : dollar + "." + penny;
-    }
-
-    public Integer dollarStringToInt(String dollarInString) {
-
-        if (dollarInString.contains("\\.")) {
-            String[] temp = dollarInString.split("\\.");
-            return Integer.parseInt(temp[0]) * 100 + Integer.parseInt(temp[1]);
-        } else {
-            return Integer.parseInt(dollarInString) * 100;
-        }
-    }
 
     public void purchaseItem() {
-
         Scanner purchaseScan = new Scanner(System.in);
-        System.out.print("Enter Item Code: ");
-
         // user enters itemCode
-        String userItemCode = purchaseScan.nextLine().toUpperCase();
+        userItemCode = purchaseScan.nextLine().toUpperCase();
         Products products = productsForSale.get(userItemCode);
 
         if (!(products.getItemStock() == 0)) {
@@ -88,28 +47,12 @@ public class VendingMachine {
                 products.setItemStock(products.getItemStock() - 1);
             }
         }
-        System.out.println();
-        //Chip|Candy|Drink|Gum
-        String printMessage = "";
-        if (products.getCategory().equals("Chip")) {
-            System.out.println("Crunch Crunch, Yum!");
-        } else if (products.getCategory().equals("Candy")) {
-            System.out.println("Munch Munch, Yum!");
-        } else if (products.getCategory().equals("Drink")) {
-            System.out.println("Glug Glug, Yum!"); }
-        else if (products.getCategory().equals("Gum")) {
-            System.out.println("Chew Chew, Yum!");
-        }
-
-
-
-
     }
 
-    public void finishTransaction() {
 
-        //in pennies
-                            //49 / 25 -> 1    49 % 25 -> 24
+    public void finishTransaction() {
+        //  in pennies
+        //  49 / 25 -> 1    49 % 25 -> 24
         int quarters = balance.getCurrentBalance() / 25;
         balance.setCurrentBalance(balance.getCurrentBalance() % 25);
         int dime = balance.getCurrentBalance() / 10;
@@ -118,11 +61,36 @@ public class VendingMachine {
         balance.setCurrentBalance(balance.getCurrentBalance() % 5);
         int penny = balance.getCurrentBalance();
         balance.setCurrentBalance(0);
+    }
 
+    public String dollarIntToString(int dollarInInteger) {
+        int dollar = dollarInInteger / 100;
+        int penny = dollarInInteger % 100;  //1650 / 100 ->50 "0"
+        return penny == 0 ? dollar + ".00" : dollar + "." + penny;
+    }
 
+    public Integer dollarStringToInt(String dollarInString) {
+        if (dollarInString.contains("\\.")) {
+            String[] temp = dollarInString.split("\\.");
+            return Integer.parseInt(temp[0]) * 100 + Integer.parseInt(temp[1]);
+        } else {
+            return Integer.parseInt(dollarInString) * 100;
+        }
+    }
 
+    public int currentBalanceAsStr() {
+        return balance.getCurrentBalance();
+    }
 
+    public List<String> getItemCodeList() {
+        return itemCodeList;
+    }
 
+    public Map<String, Products> getProductsForSale() {
+        return productsForSale;
+    }
 
+    public String getUserItemCode() {
+        return userItemCode;
     }
 }
