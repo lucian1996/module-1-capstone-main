@@ -10,42 +10,21 @@ public class VendingMachine {
     private Balance balance = new Balance();
     private Map<String, Products> productsForSale = new HashMap<>();
 
-
-    /*
-
-     */
-
     //get data from VendingMachine.csv
-    public void getData() {
-        File inputFile = new File("VendingMachine.csv");
-//        Products products = new Products();
-//        String finalString = "";
-        try (Scanner fileScanner = new Scanner(inputFile)) {
+    public void getData(Scanner fileScanner) {
             while (fileScanner.hasNextLine()) {
                 String line = fileScanner.nextLine();
                 String temp[] = line.split("\\|");
                 //temp[0] = itemCode temp[1] = productName, temp[2] = price
 
                 int priceInPenny = (int) (Double.parseDouble(temp[2]) * 100);
-                //itemList.add(new Products(temp[0], temp[1], priceInPenny, 5));
-
                 itemCodeList.add(temp[0]);
 
                 // Creating a Map<item code, Products class>
                 //                 item code              category  name      price       # in stock
                 productsForSale.put(temp[0], new Products(temp[3], temp[1], priceInPenny, 5));
-
             }
-            System.out.println(productsForSale.keySet());
-            System.out.println(productsForSale.get("A1").getProductName());
-
-        } catch (FileNotFoundException e) {
-            System.out.println("Cannot open the file.");
-        }
-
         balance.setCurrentBalance(0);
-
-
     }
 
     public void printStock() {
@@ -81,10 +60,7 @@ public class VendingMachine {
         int dollar = dollarInInteger / 100;
         int penny = dollarInInteger % 100;  //1650 / 100 ->50 "0"
 
-
         return penny == 0 ? dollar + ".00" : dollar + "." + penny;
-
-
     }
 
     public Integer dollarStringToInt(String dollarInString) {

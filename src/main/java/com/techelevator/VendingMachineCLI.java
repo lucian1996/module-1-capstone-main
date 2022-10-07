@@ -2,8 +2,11 @@ package com.techelevator;
 
 import com.techelevator.view.Menu;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Scanner;
 
 public class VendingMachineCLI {
 
@@ -30,31 +33,41 @@ public class VendingMachineCLI {
     }
 
     public void run() {
-
-
-        //===== you may use/modify the existing Menu class or write your own ======
-        VendingMachine.getData();
+        File inputFile = new File("VendingMachine.csv");
+        VendingMachine vendingMachine = new VendingMachine();
+        try (Scanner fileScanner = new Scanner(inputFile)) {
+            vendingMachine.getData(fileScanner);
+        } catch (FileNotFoundException e) {
+            System.out.println("Cannot open the file.");
+        }
 
         while (true) {
             String choice = (String) menu.getChoiceFromOptions(MAIN_MENU_OPTIONS);
 
 
             if (choice.equals(MAIN_MENU_OPTION_DISPLAY_ITEMS)) {
-                VendingMachine.printStock();
+                vendingMachine.printStock();
+
+                if (vendingMachine.printStock() == 0) {
+                    System.out.println("SOLD OUT");
+                } else {
+                    System.out.printf("%s | %s | $ %s%n", key, products.getProductName(), dollarIntToString(products.getPrice()));
+                }
+
             } else if (choice.equals(MAIN_MENU_OPTION_PURCHASE)) {
                 while (true) {
-                    System.out.printf("%nCurrent Money Provided: $ %s%n", VendingMachine.dollarIntToString(VendingMachine.currentBalanceAsStr()));
+                    System.out.printf("%nCurrent Money Provided: $ %s%n", vendingMachine.dollarIntToString(vendingMachine.currentBalanceAsStr()));
 
                     String purchaseChoice = (String) menu.getChoiceFromOptions(PURCHASING_MENU_OPTIONS);
 
                     if (purchaseChoice.equals(PURCHASING_MENU_FEED_MONEY)) {
-                        VendingMachine.takeMoney();
+                        vendingMachine.takeMoney();
                     } else if (purchaseChoice.equals(PURCHASING_MENU_SELECT_PRODUCT)) {
-                            VendingMachine.printStock();
-                            VendingMachine.purchaseItem();
+                        vendingMachine.printStock();
+                        vendingMachine.purchaseItem();
                         //VendingMachine.takeOrder();
                     } else if (purchaseChoice.equals(PURCHASING_MENU_FINALISE_TRANSACTION)) {
-                        VendingMachine.finishTransaction();
+                        vendingMachine.finishTransaction();
 
                     }
                 }
