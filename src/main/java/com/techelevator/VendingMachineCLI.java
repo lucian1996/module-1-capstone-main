@@ -2,6 +2,9 @@ package com.techelevator;
 
 import com.techelevator.view.Menu;
 
+import java.util.Collections;
+import java.util.Map;
+
 public class VendingMachineCLI {
 
     private static final String MAIN_MENU_OPTION_DISPLAY_ITEMS = "Display Vending Machine Items";
@@ -10,7 +13,7 @@ public class VendingMachineCLI {
     private static final String[] MAIN_MENU_OPTIONS = {MAIN_MENU_OPTION_DISPLAY_ITEMS, MAIN_MENU_OPTION_PURCHASE, MAIN_MENU_OPTION_EXIT};
     private static final String PURCHASING_MENU_FEED_MONEY = "Feed Money";
     private static final String PURCHASING_MENU_SELECT_PRODUCT = "Select Product";
-    private static final String PURCHASING_MENU_FINALISE_TRANSACTION = "Finalise Transaction";
+    private static final String PURCHASING_MENU_FINALISE_TRANSACTION = "Finish Transaction";
     private static final String[] PURCHASING_MENU_OPTIONS = {PURCHASING_MENU_FEED_MONEY, PURCHASING_MENU_SELECT_PRODUCT, PURCHASING_MENU_FINALISE_TRANSACTION};
 
 
@@ -29,7 +32,7 @@ public class VendingMachineCLI {
     public void run() {
 
 
-        //===== you nay use/modify the existing Menu class or write your own ======
+        //===== you may use/modify the existing Menu class or write your own ======
         VendingMachine.getData();
 
         while (true) {
@@ -51,6 +54,8 @@ public class VendingMachineCLI {
                             VendingMachine.purchaseItem();
                         //VendingMachine.takeOrder();
                     } else if (purchaseChoice.equals(PURCHASING_MENU_FINALISE_TRANSACTION)) {
+                        VendingMachine.finishTransaction();
+
                     }
                 }
             } else if (choice.equals(MAIN_MENU_OPTION_EXIT)) {

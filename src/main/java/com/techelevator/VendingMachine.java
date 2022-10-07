@@ -5,17 +5,18 @@ import java.io.FileNotFoundException;
 import java.util.*;
 
 public class VendingMachine {
-    private static List<Products> itemList = new ArrayList<>();
+    private List<String> itemCodeList = new ArrayList<>();
     private int currentMoneyProvided = 0;
-    private static Balance balance = new Balance();
-    private static Map<String, Products> productsForSale = new HashMap<>();
+    private Balance balance = new Balance();
+    private Map<String, Products> productsForSale = new HashMap<>();
 
-//    public static void main(String[] args) {
-//        getData();
-//    }
+
+    /*
+
+     */
 
     //get data from VendingMachine.csv
-    public static void getData() {
+    public void getData() {
         File inputFile = new File("VendingMachine.csv");
 //        Products products = new Products();
 //        String finalString = "";
@@ -26,22 +27,18 @@ public class VendingMachine {
                 //temp[0] = itemCode temp[1] = productName, temp[2] = price
 
                 int priceInPenny = (int) (Double.parseDouble(temp[2]) * 100);
-                itemList.add(new Products(temp[0], temp[1], priceInPenny, 5));
-                productsForSale.put(temp[0], new Products(temp[0], temp[1], priceInPenny, 5));
-                ;
-                //
-                //create a map, assign temp[0] to key, itemList(or Products class) as value.
-                //
+                //itemList.add(new Products(temp[0], temp[1], priceInPenny, 5));
 
+                itemCodeList.add(temp[0]);
 
-                
-//                finalString = temp[0] + temp[1] + temp[2];
+                // Creating a Map<item code, Products class>
+                //                 item code              category  name      price       # in stock
+                productsForSale.put(temp[0], new Products(temp[3], temp[1], priceInPenny, 5));
+
             }
             System.out.println(productsForSale.keySet());
             System.out.println(productsForSale.get("A1").getProductName());
-//            for(Products each: itemList) {
-//                System.out.println(finalString);
-//            }
+
         } catch (FileNotFoundException e) {
             System.out.println("Cannot open the file.");
         }
@@ -51,30 +48,28 @@ public class VendingMachine {
 
     }
 
-    public static void printStock() {
-        for (int i = 0; i < itemList.size(); i++) {
+    public void printStock() {
+        for (int i = 0; i < itemCodeList.size(); i++) {
             // A1 | product name | price || "SOLD OUT" if out of stock.
-            if (itemList.get(i).getItemStock() == 0) {
+            String key = itemCodeList.get(i);
+            Products products = productsForSale.get(key);
+
+            if (products.getItemStock() == 0) {
                 System.out.println("SOLD OUT");
             } else {
-                String itemCode = itemList.get(i).getItemCode();
-                String productName = itemList.get(i).getProductName();
-
-                String money = dollarIntToString(itemList.get(i).getPrice());
-                System.out.printf("%s | %s | $ %s%n", itemCode, productName, money);
-
+                System.out.printf("%s | %s | $ %s%n", key, products.getProductName(), dollarIntToString(products.getPrice()));
             }
         }
     }
 
-    public static void takeMoney() {
+    public void takeMoney() {
         Scanner scanMoney = new Scanner(System.in);
         System.out.print("Enter dollar bills please: ");
         String stringDollar = scanMoney.nextLine();
         balance.setCurrentBalance(balance.getCurrentBalance() + dollarStringToInt(stringDollar));
     }
 
-    public static int currentBalanceAsStr() {
+    public int currentBalanceAsStr() {
 
         return balance.getCurrentBalance();
     }
@@ -82,7 +77,7 @@ public class VendingMachine {
         public static void updateStock() {
     }
 
-    public static String dollarIntToString(int dollarInInteger) {
+    public String dollarIntToString(int dollarInInteger) {
         int dollar = dollarInInteger / 100;
         int penny = dollarInInteger % 100;  //1650 / 100 ->50 "0"
 
@@ -92,7 +87,7 @@ public class VendingMachine {
 
     }
 
-    public static Integer dollarStringToInt(String dollarInString) {
+    public Integer dollarStringToInt(String dollarInString) {
 
         if (dollarInString.contains("\\.")) {
             String[] temp = dollarInString.split("\\.");
@@ -102,15 +97,56 @@ public class VendingMachine {
         }
     }
 
-    public static void purchaseItem() {
-                Scanner purchaseScan = new Scanner(System.in);
-                System.out.print("Enter Item Code: ");
-                String purchaseItemCode = purchaseScan.nextLine();
-                if (!(productsForSale.get(purchaseItemCode).getItemStock() == 0)) {
-                    if (balance.getCurrentBalance() >= productsForSale.get(purchaseItemCode).getPrice()) {
-                        balance.setCurrentBalance(balance.getCurrentBalance() - productsForSale.get(purchaseItemCode).getPrice());
-                        productsForSale.get(purchaseItemCode).setItemStock(productsForSale.get(purchaseItemCode).getItemStock() - 1);
-                    }
-                }
+    public void purchaseItem() {
+
+        Scanner purchaseScan = new Scanner(System.in);
+        System.out.print("Enter Item Code: ");
+
+        // user enters itemCode
+        String userItemCode = purchaseScan.nextLine().toUpperCase();
+        Products products = productsForSale.get(userItemCode);
+
+        if (!(products.getItemStock() == 0)) {
+            if (balance.getCurrentBalance() >= products.getPrice()) {
+                balance.setCurrentBalance(balance.getCurrentBalance() - products.getPrice());
+                products.setItemStock(products.getItemStock() - 1);
+            }
         }
+        System.out.println();
+        //Chip|Candy|Drink|Gum
+        String printMessage = "";
+        if (products.getCategory().equals("Chip")) {
+            System.out.println("Crunch Crunch, Yum!");
+        } else if (products.getCategory().equals("Candy")) {
+            System.out.println("Munch Munch, Yum!");
+        } else if (products.getCategory().equals("Drink")) {
+            System.out.println("Glug Glug, Yum!"); }
+        else if (products.getCategory().equals("Gum")) {
+            System.out.println("Chew Chew, Yum!");
+        }
+
+
+
+
     }
+
+    public void finishTransaction() {
+
+        //in pennies
+                            //49 / 25 -> 1    49 % 25 -> 24
+        int quarters = balance.getCurrentBalance() / 25;
+        balance.setCurrentBalance(balance.getCurrentBalance() % 25);
+        int dime = balance.getCurrentBalance() / 10;
+        balance.setCurrentBalance(balance.getCurrentBalance() % 10);
+        int nickel = balance.getCurrentBalance() / 5;
+        balance.setCurrentBalance(balance.getCurrentBalance() % 5);
+        int penny = balance.getCurrentBalance();
+        balance.setCurrentBalance(0);
+
+
+
+
+
+
+    }
+}

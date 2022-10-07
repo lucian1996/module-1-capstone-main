@@ -2,28 +2,28 @@ package com.techelevator;
 
 public class Products {
 
-    private String itemCode;
+    private String category;
     private String productName;
     private int price;
     private int itemStock;
 
 
-    public Products(String itemCode, String productName, int price, int itemStock) {
-        this.itemCode = itemCode;
+    public Products(String category, String productName, int price, int itemStock) {
+        this.category = category;
         this.productName = productName;
         this.price = price;
         this.itemStock = itemStock;
     }
 
-    public Products() {
 
+    public String getCategory() {
+        return category;
     }
-    public String getItemCode() {
-        return itemCode;
+
+    public void setCategory(String category) {
+        this.category = category;
     }
-    public void setItemCode(String itemCode) {
-        this.itemCode = itemCode;
-    }
+
     public String getProductName() {
         return productName;
     }
