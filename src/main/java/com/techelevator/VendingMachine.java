@@ -17,6 +17,7 @@ public class VendingMachine {
     private List<Integer> changes = new ArrayList<>();
     private boolean isPurchasable;
     private String stringDollar;
+    private Scanner scanner = new Scanner(System.in);
 
 
     //get data from VendingMachine.csv
@@ -37,15 +38,17 @@ public class VendingMachine {
     }
 
     public void takeMoney() {
-        Scanner scanMoney = new Scanner(System.in);
-        stringDollar = scanMoney.nextLine();
+//        Scanner scanMoney = new Scanner(System.in);
+//        stringDollar = scanMoney.nextLine();
+        stringDollar = getUserInput();
         balance.setCurrentBalance(balance.getCurrentBalance() + dollarStringToInt(stringDollar));
     }
 
     public void purchaseItem() {
-        Scanner purchaseScan = new Scanner(System.in);
-        // user enters itemCode
-        userItemCode = purchaseScan.nextLine().toUpperCase();
+//        Scanner purchaseScan = new Scanner(System.in);
+//        // user enters itemCode
+//        userItemCode = purchaseScan.nextLine().toUpperCase();
+        userItemCode = getUserInput().toUpperCase();
         Products products = productsForSale.get(userItemCode);
         if (!(products.getItemStock() == 0)) {
             if (balance.getCurrentBalance() >= products.getPrice()) {
@@ -98,7 +101,9 @@ public class VendingMachine {
     }
 
 
-
+    public String getUserInput () {
+        return scanner.nextLine();
+    }
 
 
     public String dollarIntToString(int dollarInInteger) {
@@ -114,7 +119,7 @@ public class VendingMachine {
     }
 
     public Integer dollarStringToInt(String dollarInString) {
-        if (dollarInString.contains("\\.")) {
+        if (dollarInString.contains(".")) {
             String[] temp = dollarInString.split("\\.");
             return Integer.parseInt(temp[0]) * 100 + Integer.parseInt(temp[1]);
         } else {

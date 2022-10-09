@@ -94,7 +94,7 @@ public class VendingMachineCLI {
                     }
                 }
             } else if (choice.equals(MAIN_MENU_OPTION_EXIT)) {
-                // exit method
+                break;
             }
         }
     }
