@@ -57,13 +57,14 @@ public class VendingMachineCLI {
                         System.out.println();
                         String printMessage = "";
                         if (vendingMachine.isPurchasable()) {
-                            if (vendingMachine.getProductsForSale().get(vendingMachine.getUserItemCode()).getCategory().equals("Chip")) {
+                            String curCat = vendingMachine.getProductsForSale().get(vendingMachine.getUserItemCode()).getCategory();
+                            if (curCat.equals("Chip")) {
                                 System.out.println("Crunch Crunch, Yum!");
-                            } else if (vendingMachine.getProductsForSale().get(vendingMachine.getUserItemCode()).getCategory().equals("Candy")) {
+                            } else if (curCat.equals("Candy")) {
                                 System.out.println("Munch Munch, Yum!");
-                            } else if (vendingMachine.getProductsForSale().get(vendingMachine.getUserItemCode()).getCategory().equals("Drink")) {
+                            } else if (curCat.equals("Drink")) {
                                 System.out.println("Glug Glug, Yum!");
-                            } else if (vendingMachine.getProductsForSale().get(vendingMachine.getUserItemCode()).getCategory().equals("Gum")) {
+                            } else if (curCat.equals("Gum")) {
                                 System.out.println("Chew Chew, Yum!");
                             }
                         } else {
