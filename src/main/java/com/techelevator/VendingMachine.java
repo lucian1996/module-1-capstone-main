@@ -15,7 +15,7 @@ public class VendingMachine {
     private Map<String, Products> productsForSale = new HashMap<>();
     private String userItemCode;
     private List<Integer> changes = new ArrayList<>();
-    private boolean isPurchasable;
+    private boolean isPurchasable = true;
     private String stringDollar;
     private Scanner scanner = new Scanner(System.in);
 
@@ -38,31 +38,36 @@ public class VendingMachine {
     }
 
     public void takeMoney() {
-//        Scanner scanMoney = new Scanner(System.in);
-//        stringDollar = scanMoney.nextLine();
         stringDollar = getUserInput();
-        balance.setCurrentBalance(balance.getCurrentBalance() + dollarStringToInt(stringDollar));
+        if (dollarStringToInt(stringDollar) < 0){
+            System.out.println("Cannot Deposit negative amount");
+        } else if (dollarStringToInt(stringDollar) > 500000) {
+            System.out.println("Cannot Deposit more than $5000");
+        } else {
+            balance.setCurrentBalance(balance.getCurrentBalance() + dollarStringToInt(stringDollar));
+        }
     }
 
     public void purchaseItem() {
-//        Scanner purchaseScan = new Scanner(System.in);
-//        // user enters itemCode
-//        userItemCode = purchaseScan.nextLine().toUpperCase();
-        userItemCode = getUserInput().toUpperCase();
-        Products products = productsForSale.get(userItemCode);
-        if (!(products.getItemStock() == 0)) {
-            if (balance.getCurrentBalance() >= products.getPrice()) {
-                balance.setCurrentBalance(balance.getCurrentBalance() - products.getPrice());
-                products.setItemStock(products.getItemStock() - 1);
-                isPurchasable = true;
+            userItemCode = getUserInput().toUpperCase();
+            Products products = productsForSale.get(userItemCode);
+            if (productsForSale.get(userItemCode) == null) {
+                System.out.println("Invalid Item Code");
             } else {
-                isPurchasable = false;
+                if (!(products.getItemStock() == 0)) {
+                    if (balance.getCurrentBalance() >= products.getPrice()) {
+                        balance.setCurrentBalance(balance.getCurrentBalance() - products.getPrice());
+                        products.setItemStock(products.getItemStock() - 1);
+                        isPurchasable = true;
+                    } else {
+                        isPurchasable = false;
+                    }
+                } else {
+                    isPurchasable = false;
+                }
             }
-        } else {
-            isPurchasable = false;
         }
 
-    }
 
     public List<Integer> finishTransaction() {
         balance.balanceToChange();
@@ -73,15 +78,11 @@ public class VendingMachine {
         return changes;
     }
 
-
     public void logger(String action) {
         String path = "Log.txt";
         File logFile = new File(path);
 
-        try (PrintWriter logOutput = new PrintWriter(new FileWriter("Log.txt", true)))
-
-
-        {
+        try (PrintWriter logOutput = new PrintWriter(new FileWriter("Log.txt", true))) {
             LocalTime localTime = LocalTime.now();
             DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("hh:mm:ss a");
             //date     time    AM/PM    Feed money/item+item code/Give change    price/transaction     total balance
@@ -98,11 +99,6 @@ public class VendingMachine {
             System.err.println("Cannot open the file for writing.");
         } catch (IOException e) {
             System.err.println("file not found.");        }
-    }
-
-
-    public String getUserInput () {
-        return scanner.nextLine();
     }
 
 
@@ -125,6 +121,10 @@ public class VendingMachine {
         } else {
             return Integer.parseInt(dollarInString) * 100;
         }
+    }
+
+    public String getUserInput () {
+        return scanner.nextLine();
     }
 
     public int currentBalanceAsStr() {

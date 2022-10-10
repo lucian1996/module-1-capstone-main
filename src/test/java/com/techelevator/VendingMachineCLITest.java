@@ -22,7 +22,7 @@ public class VendingMachineCLITest {
         balSut = new Balance();
     }
     @Test
-    public void shouldDisplayItemList() {
+    public void menu_should_display_item_list() {
 
         List<String> actual = sut.getItemCodeList();
         List<String> expected = new ArrayList<>();
@@ -102,6 +102,83 @@ public class VendingMachineCLITest {
         int actual = balSut.getCurrentBalance();
         int expected = 900;
 
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    public void take_money_should_decline_negative_integer(){
+        balSut.setCurrentBalance(0);
+        String userInput = "-9";
+        if (sut.dollarStringToInt(userInput) < 0){
+            System.out.println("Cannot Deposit negative amount");
+        } else if (sut.dollarStringToInt(userInput) > 500000) {
+            System.out.println("Cannot Deposit more than $5000");
+        } else {
+            balSut.setCurrentBalance(balSut.getCurrentBalance() + sut.dollarStringToInt(userInput));
+        }
+        int actual = balSut.getCurrentBalance();
+        int expected = 0;
+
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    public void take_money_should_decline_9000() {
+        balSut.setCurrentBalance(0);
+        String userInput = "9000";
+        if (sut.dollarStringToInt(userInput) < 0){
+            System.out.println("Cannot Deposit negative amount");
+        } else if (sut.dollarStringToInt(userInput) > 500000) {
+            System.out.println("Cannot Deposit more than $5000");
+        } else {
+            balSut.setCurrentBalance(balSut.getCurrentBalance() + sut.dollarStringToInt(userInput));
+        }
+        int actual = balSut.getCurrentBalance();
+        int expected = 0;
+
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    public void purchase_item_should_accept_B1() {
+        boolean actual = false;
+        boolean expected = true;
+        String userInput = "B1";
+        if (sut.getItemCodeList().contains(userInput)) {
+            actual = true;
+        }
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    public void purchase_item_should_decline_G4() {
+        boolean actual = false;
+        boolean expected = false;
+        String userInput = "G4";
+        if (sut.getItemCodeList().contains(userInput)) {
+            actual = true;
+        }
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    public void purchase_item_should_decline_zero_balance() {
+        boolean actual;
+        boolean expected = false;
+        balSut.setCurrentBalance(0);
+        String userInput = "A1";
+        Products products = sut.getProductsForSale().get(userInput);
+        if (!(products.getItemStock() == 0)) {
+            if (balSut.getCurrentBalance() >= products.getPrice()) {
+                balSut.setCurrentBalance(balSut.getCurrentBalance() - products.getPrice());
+                products.setItemStock(products.getItemStock() - 1);
+                actual = true;
+            } else {
+                actual = false;
+            }
+        } else {
+            actual = false;
+        }
         Assert.assertEquals(expected, actual);
     }
 }
