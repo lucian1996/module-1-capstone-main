@@ -4,8 +4,6 @@ import com.techelevator.view.Menu;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.Collections;
-import java.util.Map;
 import java.util.Scanner;
 
 public class VendingMachineCLI {
@@ -55,28 +53,29 @@ public class VendingMachineCLI {
                         vendingMachine.logger("FEED MONEY");
                         //call log method
                     } else if (purchaseChoice.equals(PURCHASING_MENU_SELECT_PRODUCT)) {
-                            printStock(vendingMachine);
-                            while (vendingMachine.isPurchasable()) {
-                                System.out.print("Enter Item Code: ");
-                                vendingMachine.purchaseItem();
+                        printStock(vendingMachine);
+                        while(!vendingMachine.isValidCode()) {
+                            System.out.print("Enter Item Code: ");
+                            vendingMachine.purchaseItem();
+                        }
+                        vendingMachine.resetIsValidCode();
+                        vendingMachine.logger("ITEM CODE");
+                        //call log method
+                        System.out.println();
+                        String printMessage = "";
+                        if (vendingMachine.isPurchasable()) {
+                            if (vendingMachine.getProductsForSale().get(vendingMachine.getUserItemCode()).getCategory().equals("Chip")) {
+                                System.out.println("Crunch Crunch, Yum!");
+                            } else if (vendingMachine.getProductsForSale().get(vendingMachine.getUserItemCode()).getCategory().equals("Candy")) {
+                                System.out.println("Munch Munch, Yum!");
+                            } else if (vendingMachine.getProductsForSale().get(vendingMachine.getUserItemCode()).getCategory().equals("Drink")) {
+                                System.out.println("Glug Glug, Yum!");
+                            } else if (vendingMachine.getProductsForSale().get(vendingMachine.getUserItemCode()).getCategory().equals("Gum")) {
+                                System.out.println("Chew Chew, Yum!");
                             }
-                            vendingMachine.logger("ITEM CODE");
-                            //call log method
-                            System.out.println();
-                            String printMessage = "";
-                            if (vendingMachine.isPurchasable()) {
-                                if (vendingMachine.getProductsForSale().get(vendingMachine.getUserItemCode()).getCategory().equals("Chip")) {
-                                    System.out.println("Crunch Crunch, Yum!");
-                                } else if (vendingMachine.getProductsForSale().get(vendingMachine.getUserItemCode()).getCategory().equals("Candy")) {
-                                    System.out.println("Munch Munch, Yum!");
-                                } else if (vendingMachine.getProductsForSale().get(vendingMachine.getUserItemCode()).getCategory().equals("Drink")) {
-                                    System.out.println("Glug Glug, Yum!");
-                                } else if (vendingMachine.getProductsForSale().get(vendingMachine.getUserItemCode()).getCategory().equals("Gum")) {
-                                    System.out.println("Chew Chew, Yum!");
-                                }
-                            } else {
-                                System.out.println("Insufficient Fund");
-                            }
+                        } else {
+                            System.out.println("Insufficient Fund");
+                        }
                     } else if (purchaseChoice.equals(PURCHASING_MENU_FINALISE_TRANSACTION)) {
                         vendingMachine.logger("GIVE CHANGE");
                         //call log method

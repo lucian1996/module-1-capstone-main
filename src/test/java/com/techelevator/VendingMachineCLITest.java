@@ -141,13 +141,10 @@ public class VendingMachineCLITest {
 
     @Test
     public void purchase_item_should_accept_B1() {
-        boolean actual = false;
-        boolean expected = true;
-        String userInput = "B1";
-        if (sut.getItemCodeList().contains(userInput)) {
-            actual = true;
-        }
-        Assert.assertEquals(expected, actual);
+
+
+
+
     }
 
     @Test
@@ -161,24 +158,7 @@ public class VendingMachineCLITest {
         Assert.assertEquals(expected, actual);
     }
 
-    @Test
-    public void purchase_item_should_decline_zero_balance() {
-        boolean actual;
-        boolean expected = false;
-        balSut.setCurrentBalance(0);
-        String userInput = "A1";
-        Products products = sut.getProductsForSale().get(userInput);
-        if (!(products.getItemStock() == 0)) {
-            if (balSut.getCurrentBalance() >= products.getPrice()) {
-                balSut.setCurrentBalance(balSut.getCurrentBalance() - products.getPrice());
-                products.setItemStock(products.getItemStock() - 1);
-                actual = true;
-            } else {
-                actual = false;
-            }
-        } else {
-            actual = false;
-        }
-        Assert.assertEquals(expected, actual);
-    }
+
+
+
 }

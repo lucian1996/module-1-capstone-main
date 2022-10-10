@@ -1,9 +1,7 @@
 package com.techelevator;
 
 import java.io.*;
-import java.text.Format;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -18,6 +16,7 @@ public class VendingMachine {
     private boolean isPurchasable = true;
     private String stringDollar;
     private Scanner scanner = new Scanner(System.in);
+    private boolean isValidCode;
 
 
     //get data from VendingMachine.csv
@@ -49,16 +48,20 @@ public class VendingMachine {
     }
 
     public void purchaseItem() {
+
             userItemCode = getUserInput().toUpperCase();
             Products products = productsForSale.get(userItemCode);
             if (productsForSale.get(userItemCode) == null) {
                 System.out.println("Invalid Item Code");
+                isValidCode = false;
             } else {
+                isValidCode = true;
                 if (!(products.getItemStock() == 0)) {
                     if (balance.getCurrentBalance() >= products.getPrice()) {
                         balance.setCurrentBalance(balance.getCurrentBalance() - products.getPrice());
                         products.setItemStock(products.getItemStock() - 1);
                         isPurchasable = true;
+
                     } else {
                         isPurchasable = false;
                     }
@@ -145,5 +148,13 @@ public class VendingMachine {
 
     public boolean isPurchasable() {
         return isPurchasable;
+    }
+
+    public boolean isValidCode() {
+        return isValidCode;
+    }
+
+    public void resetIsValidCode() {
+        this.isValidCode = false;
     }
 }
