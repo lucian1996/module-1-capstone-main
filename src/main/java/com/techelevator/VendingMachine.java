@@ -18,14 +18,13 @@ public class VendingMachine {
     private Scanner scanner = new Scanner(System.in);
     private boolean isValidCode;
 
-
     //get data from VendingMachine.csv
     public void getData(Scanner fileScanner) {
             while (fileScanner.hasNextLine()) {
                 String line = fileScanner.nextLine();
                 String temp[] = line.split("\\|");
-                //temp[0] = itemCode temp[1] = productName, temp[2] = price
 
+                //temp[0] = itemCode temp[1] = productName, temp[2] = price
                 int priceInPenny = (int) (Double.parseDouble(temp[2]) * 100);
                 itemCodeList.add(temp[0]);
 
@@ -48,7 +47,6 @@ public class VendingMachine {
     }
 
     public void purchaseItem() {
-
             userItemCode = getUserInput().toUpperCase();
             Products products = productsForSale.get(userItemCode);
             if (productsForSale.get(userItemCode) == null) {
@@ -61,7 +59,6 @@ public class VendingMachine {
                         balance.setCurrentBalance(balance.getCurrentBalance() - products.getPrice());
                         products.setItemStock(products.getItemStock() - 1);
                         isPurchasable = true;
-
                     } else {
                         isPurchasable = false;
                     }
@@ -70,7 +67,6 @@ public class VendingMachine {
                 }
             }
         }
-
 
     public List<Integer> finishTransaction() {
         balance.balanceToChange();
@@ -84,7 +80,6 @@ public class VendingMachine {
     public void logger(String action) {
         String path = "Log.txt";
         File logFile = new File(path);
-
         try (PrintWriter logOutput = new PrintWriter(new FileWriter("Log.txt", true))) {
             LocalTime localTime = LocalTime.now();
             DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("hh:mm:ss a");
@@ -103,7 +98,6 @@ public class VendingMachine {
         } catch (IOException e) {
             System.err.println("file not found.");        }
     }
-
 
     public String dollarIntToString(int dollarInInteger) {
         int dollar = dollarInInteger / 100;
@@ -126,34 +120,27 @@ public class VendingMachine {
         }
     }
 
-    public String getUserInput () {
-        return scanner.nextLine();
-    }
-
     public int currentBalanceAsStr() {
         return balance.getCurrentBalance();
     }
-
+    public String getUserInput () {
+        return scanner.nextLine();
+    }
     public List<String> getItemCodeList() {
         return itemCodeList;
     }
-
     public Map<String, Products> getProductsForSale() {
         return productsForSale;
     }
-
     public String getUserItemCode() {
         return userItemCode;
     }
-
     public boolean isPurchasable() {
         return isPurchasable;
     }
-
     public boolean isValidCode() {
         return isValidCode;
     }
-
     public void resetIsValidCode() {
         this.isValidCode = false;
     }

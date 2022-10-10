@@ -7,7 +7,6 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 public class VendingMachineCLI {
-
     private static final String MAIN_MENU_OPTION_DISPLAY_ITEMS = "Display Vending Machine Items";
     private static final String MAIN_MENU_OPTION_PURCHASE = "Purchase";
     private static final String MAIN_MENU_OPTION_EXIT = "Exit";
@@ -19,15 +18,10 @@ public class VendingMachineCLI {
     private VendingMachine vendingMachine = new VendingMachine();
     private Menu menu;
 
-
     public static void main(String[] args) {
         Menu menu = new Menu(System.in, System.out);
         VendingMachineCLI cli = new VendingMachineCLI(menu);
         cli.run();
-    }
-
-    public VendingMachineCLI(Menu menu) {
-        this.menu = menu;
     }
 
     public void run() {
@@ -37,7 +31,6 @@ public class VendingMachineCLI {
         } catch (FileNotFoundException e) {
             System.out.println("Cannot open the file.");
         }
-
         while (true) {
             String choice = (String) menu.getChoiceFromOptions(MAIN_MENU_OPTIONS);
             if (choice.equals(MAIN_MENU_OPTION_DISPLAY_ITEMS)) {
@@ -100,12 +93,15 @@ public class VendingMachineCLI {
         }
     }
 
+    public VendingMachineCLI(Menu menu) {
+        this.menu = menu;
+    }
+
     public static void printStock(VendingMachine vendingMachine) {
         for (int i = 0; i < vendingMachine.getItemCodeList().size(); i++) {
             // A1 | product name | price || "SOLD OUT" if out of stock.
             String key = vendingMachine.getItemCodeList().get(i);
             Products products = vendingMachine.getProductsForSale().get(key);
-
             if (products.getItemStock() == 0) {
                 System.out.println("SOLD OUT");
             } else {

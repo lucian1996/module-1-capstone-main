@@ -1,7 +1,6 @@
 package com.techelevator;
 
 public class Products {
-
     private String category;
     private String productName;
     private int price;
@@ -15,15 +14,9 @@ public class Products {
         this.itemStock = itemStock;
     }
 
-
     public String getCategory() {
         return category;
     }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
     public String getProductName() {
         return productName;
     }
@@ -32,6 +25,9 @@ public class Products {
     }
     public int getItemStock() {
         return itemStock;
+    }
+    public void setCategory(String category) {
+        this.category = category;
     }
     public void setProductName(String productName) {
         this.productName = productName;
