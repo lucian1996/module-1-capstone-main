@@ -1,13 +1,13 @@
 package com.techelevator;
 
-public class Products {
+public class Product {
     private String category;
     private String productName;
     private int price;
     private int itemStock;
 
 
-    public Products(String category, String productName, int price, int itemStock) {
+    public Product(String category, String productName, int price, int itemStock) {
         this.category = category;
         this.productName = productName;
         this.price = price;

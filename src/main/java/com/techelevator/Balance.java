@@ -6,7 +6,6 @@ public class Balance {
     private int dime;
     private int nickel;
     private int penny;
-    private int remainingBalance;
 
     public void balanceToChange() {
         quarter = currentBalance / 25;

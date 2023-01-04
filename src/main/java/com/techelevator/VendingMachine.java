@@ -7,30 +7,35 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class VendingMachine {
-    private List<String> itemCodeList = new ArrayList<>();
-    private int currentMoneyProvided = 0;
-    private Balance balance = new Balance();
-    private Map<String, Products> productsForSale = new HashMap<>();
+    private final int currentMoneyProvided = 0;
+    private final Balance balance = new Balance();
+    private final List<String> itemCodeList = new ArrayList<>();
+    private final Map<String, Product> productList = new HashMap<>();
+    private final List<Integer> changes = new ArrayList<>();
+    private final Scanner scanner = new Scanner(System.in);
     private String userItemCode;
-    private List<Integer> changes = new ArrayList<>();
-    private boolean isPurchasable = true;
-    private String stringDollar;
-    private Scanner scanner = new Scanner(System.in);
     private boolean isValidCode;
+    private boolean isPurchasable;
+    private String stringDollar;
+
 
     //get data from VendingMachine.csv
     public void getData(Scanner fileScanner) {
             while (fileScanner.hasNextLine()) {
-                String line = fileScanner.nextLine();
-                String temp[] = line.split("\\|");
+                String inputData = fileScanner.nextLine();
+                String[] itemData = inputData.split("\\|");
+                String itemCode = itemData[0];
+                String productName = itemData[1];
+                String price = itemData[2];
+                String category = itemData[3];
+                int stock = 5;
 
-                //temp[0] = itemCode temp[1] = productName, temp[2] = price
-                int priceInPenny = (int) (Double.parseDouble(temp[2]) * 100);
-                itemCodeList.add(temp[0]);
+                int priceInPenny = (int) (Double.parseDouble(price) * 100);
+                itemCodeList.add(itemCode);
 
                 // Creating a Map<item code, Products class>
                 //                 item code              category  name      price       # in stock
-                productsForSale.put(temp[0], new Products(temp[3], temp[1], priceInPenny, 5));
+                productList.put(itemCode, new Product(category, productName, priceInPenny, stock));
             }
         balance.setCurrentBalance(0);
     }
@@ -48,16 +53,16 @@ public class VendingMachine {
 
     public void purchaseItem() {
             userItemCode = getUserInput().toUpperCase();
-            Products products = productsForSale.get(userItemCode);
-            if (productsForSale.get(userItemCode) == null) {
+            Product itemChoice = productList.get(userItemCode);
+            if (productList.get(userItemCode) == null) {
                 System.out.println("Invalid Item Code");
                 isValidCode = false;
             } else {
                 isValidCode = true;
-                if (!(products.getItemStock() == 0)) {
-                    if (balance.getCurrentBalance() >= products.getPrice()) {
-                        balance.setCurrentBalance(balance.getCurrentBalance() - products.getPrice());
-                        products.setItemStock(products.getItemStock() - 1);
+                if (!(itemChoice.getItemStock() == 0)) {
+                    if (balance.getCurrentBalance() >= itemChoice.getPrice()) {
+                        balance.setCurrentBalance(balance.getCurrentBalance() - itemChoice.getPrice());
+                        itemChoice.setItemStock(itemChoice.getItemStock() - 1);
                         isPurchasable = true;
                     } else {
                         isPurchasable = false;
@@ -89,7 +94,7 @@ public class VendingMachine {
             if (action.equals("FEED MONEY")) {
                 logOutput.append(String.format("%s %s %s $%s $%s%n", date, time, action, dollarIntToString(dollarStringToInt(stringDollar)), dollarIntToString(balance.getCurrentBalance())));
             } else if (action.equals("ITEM CODE")){
-                logOutput.append(String.format("%s %s %s %s $%s $%s%n", date, time, productsForSale.get(userItemCode).getProductName(), userItemCode, dollarIntToString(productsForSale.get(userItemCode).getPrice()), dollarIntToString(balance.getCurrentBalance())));
+                logOutput.append(String.format("%s %s %s %s $%s $%s%n", date, time, productList.get(userItemCode).getProductName(), userItemCode, dollarIntToString(productList.get(userItemCode).getPrice()), dollarIntToString(balance.getCurrentBalance())));
             } else if (action.equals("GIVE CHANGE")){
                 logOutput.append(String.format("%s %s %s $%s $%s%n", date, time, action, dollarIntToString(balance.getCurrentBalance()), dollarIntToString(dollarStringToInt("0"))));
             }
@@ -129,8 +134,8 @@ public class VendingMachine {
     public List<String> getItemCodeList() {
         return itemCodeList;
     }
-    public Map<String, Products> getProductsForSale() {
-        return productsForSale;
+    public Map<String, Product> getProductsForSale() {
+        return productList;
     }
     public String getUserItemCode() {
         return userItemCode;
