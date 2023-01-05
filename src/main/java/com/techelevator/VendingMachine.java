@@ -7,11 +7,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class VendingMachine {
-    private final int currentMoneyProvided = 0;
-    private final Balance balance = new Balance();
+    private final Balance userBalance = new Balance();
     private final List<String> itemCodeList = new ArrayList<>();
     private final Map<String, Product> productList = new HashMap<>();
-    private final List<Integer> changes = new ArrayList<>();
+    private final List<Integer> returnChange = new ArrayList<>();
     private final Scanner scanner = new Scanner(System.in);
     private String userItemCode;
     private boolean isValidCode;
@@ -22,8 +21,9 @@ public class VendingMachine {
     //get data from VendingMachine.csv
     public void getData(Scanner fileScanner) {
             while (fileScanner.hasNextLine()) {
-                String inputData = fileScanner.nextLine();
-                String[] itemData = inputData.split("\\|");
+                String input = fileScanner.nextLine();
+                String[] itemData = input.split("\\|");
+
                 String itemCode = itemData[0];
                 String productName = itemData[1];
                 String price = itemData[2];
@@ -32,36 +32,33 @@ public class VendingMachine {
 
                 int priceInPenny = (int) (Double.parseDouble(price) * 100);
                 itemCodeList.add(itemCode);
-
-                // Creating a Map<item code, Products class>
-                //                 item code              category  name      price       # in stock
                 productList.put(itemCode, new Product(category, productName, priceInPenny, stock));
             }
-        balance.setCurrentBalance(0);
+        userBalance.setBalance(0);
     }
 
     public void takeMoney() {
-        stringDollar = getUserInput();
+        stringDollar = userInput();
         if (dollarStringToInt(stringDollar) < 0){
             System.out.println("Cannot Deposit negative amount");
         } else if (dollarStringToInt(stringDollar) > 500000) {
             System.out.println("Cannot Deposit more than $5000");
         } else {
-            balance.setCurrentBalance(balance.getCurrentBalance() + dollarStringToInt(stringDollar));
+            userBalance.setBalance(userBalance.getBalance() + dollarStringToInt(stringDollar));
         }
     }
 
     public void purchaseItem() {
-            userItemCode = getUserInput().toUpperCase();
+            userItemCode = userInput().toUpperCase();
             Product itemChoice = productList.get(userItemCode);
             if (productList.get(userItemCode) == null) {
                 System.out.println("Invalid Item Code");
                 isValidCode = false;
             } else {
                 isValidCode = true;
-                if (!(itemChoice.getItemStock() == 0)) {
-                    if (balance.getCurrentBalance() >= itemChoice.getPrice()) {
-                        balance.setCurrentBalance(balance.getCurrentBalance() - itemChoice.getPrice());
+                if (itemChoice.getItemStock() <= 1) {
+                    if (userBalance.getBalance() >= itemChoice.getPrice()) {
+                        userBalance.setBalance(userBalance.getBalance() - itemChoice.getPrice());
                         itemChoice.setItemStock(itemChoice.getItemStock() - 1);
                         isPurchasable = true;
                     } else {
@@ -74,12 +71,12 @@ public class VendingMachine {
         }
 
     public List<Integer> finishTransaction() {
-        balance.balanceToChange();
-        changes.add(balance.getQuarter());
-        changes.add(balance.getDime());
-        changes.add(balance.getNickel());
-        changes.add(balance.getPenny());
-        return changes;
+        userBalance.balanceToChange();
+        returnChange.add(userBalance.getQuarter());
+        returnChange.add(userBalance.getDime());
+        returnChange.add(userBalance.getNickel());
+        returnChange.add(userBalance.getPenny());
+        return returnChange;
     }
 
     public void logger(String action) {
@@ -91,12 +88,25 @@ public class VendingMachine {
             //date     time    AM/PM    Feed money/item+item code/Give change    price/transaction     total balance
             String date = String.valueOf(LocalDate.now());
             String time = String.valueOf(localTime.format(dateTimeFormatter));
-            if (action.equals("FEED MONEY")) {
-                logOutput.append(String.format("%s %s %s $%s $%s%n", date, time, action, dollarIntToString(dollarStringToInt(stringDollar)), dollarIntToString(balance.getCurrentBalance())));
-            } else if (action.equals("ITEM CODE")){
-                logOutput.append(String.format("%s %s %s %s $%s $%s%n", date, time, productList.get(userItemCode).getProductName(), userItemCode, dollarIntToString(productList.get(userItemCode).getPrice()), dollarIntToString(balance.getCurrentBalance())));
-            } else if (action.equals("GIVE CHANGE")){
-                logOutput.append(String.format("%s %s %s $%s $%s%n", date, time, action, dollarIntToString(balance.getCurrentBalance()), dollarIntToString(dollarStringToInt("0"))));
+            switch (action) {
+                case "FEED MONEY":
+                    logOutput.append
+                    (String.format("%s %s %s $%s $%s%n",
+                                    date, time, action, dollarIntToString(dollarStringToInt(stringDollar)),
+                                    dollarIntToString(userBalance.getBalance())));
+                    break;
+                case "ITEM CODE":
+                    logOutput.append
+                    (String.format("%s %s %s %s $%s $%s%n",
+                                    date, time, productList.get(userItemCode).getProductName(), userItemCode,
+                                    dollarIntToString(productList.get(userItemCode).getPrice()), dollarIntToString(userBalance.getBalance())));
+                    break;
+                case "GIVE CHANGE":
+                    logOutput.append
+                    (String.format("%s %s %s $%s $%s%n",
+                                    date, time, action, dollarIntToString(userBalance.getBalance()),
+                                    dollarIntToString(dollarStringToInt("0"))));
+                    break;
             }
         } catch (FileNotFoundException e) {
             System.err.println("Cannot open the file for writing.");
@@ -118,17 +128,18 @@ public class VendingMachine {
 
     public Integer dollarStringToInt(String dollarInString) {
         if (dollarInString.contains(".")) {
-            String[] temp = dollarInString.split("\\.");
-            return Integer.parseInt(temp[0]) * 100 + Integer.parseInt(temp[1]);
+            String[] dollarInCents = dollarInString.split("\\.");
+            return Integer.parseInt(dollarInCents[0]) * 100 +
+                   Integer.parseInt(dollarInCents[1]);
         } else {
             return Integer.parseInt(dollarInString) * 100;
         }
     }
 
     public int currentBalanceAsStr() {
-        return balance.getCurrentBalance();
+        return userBalance.getBalance();
     }
-    public String getUserInput () {
+    public String userInput () {
         return scanner.nextLine();
     }
     public List<String> getItemCodeList() {

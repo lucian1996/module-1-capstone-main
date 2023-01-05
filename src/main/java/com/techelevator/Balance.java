@@ -29,10 +29,10 @@ public class Balance {
     public int getPenny() {
         return penny;
     }
-    public int getCurrentBalance() {
+    public int getBalance() {
         return currentBalance;
     }
-    public void setCurrentBalance(int currentBalance) {
+    public void setBalance(int currentBalance) {
         this.currentBalance = currentBalance;
     }
 }

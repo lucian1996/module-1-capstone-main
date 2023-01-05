@@ -6,10 +6,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 public class VendingMachineCLITest {
     private VendingMachine sut;
@@ -84,10 +82,10 @@ public class VendingMachineCLITest {
     @Test
     public void take_money_current_10_add_5_total_15() {
 
-        balSut.setCurrentBalance(1000);
+        balSut.setBalance(1000);
         String userInput = "5";
-        balSut.setCurrentBalance(balSut.getCurrentBalance() + sut.dollarStringToInt(userInput));
-        int actual = balSut.getCurrentBalance();
+        balSut.setBalance(balSut.getBalance() + sut.dollarStringToInt(userInput));
+        int actual = balSut.getBalance();
         int expected = 1500;
 
         Assert.assertEquals(expected, actual);
@@ -96,10 +94,10 @@ public class VendingMachineCLITest {
     @Test
     public void take_money_current_0_add_9_total_9() {
 
-        balSut.setCurrentBalance(0);
+        balSut.setBalance(0);
         String userInput = "9";
-        balSut.setCurrentBalance(balSut.getCurrentBalance() + sut.dollarStringToInt(userInput));
-        int actual = balSut.getCurrentBalance();
+        balSut.setBalance(balSut.getBalance() + sut.dollarStringToInt(userInput));
+        int actual = balSut.getBalance();
         int expected = 900;
 
         Assert.assertEquals(expected, actual);
@@ -107,16 +105,16 @@ public class VendingMachineCLITest {
 
     @Test
     public void take_money_should_decline_negative_integer(){
-        balSut.setCurrentBalance(0);
+        balSut.setBalance(0);
         String userInput = "-9";
         if (sut.dollarStringToInt(userInput) < 0){
             System.out.println("Cannot Deposit negative amount");
         } else if (sut.dollarStringToInt(userInput) > 500000) {
             System.out.println("Cannot Deposit more than $5000");
         } else {
-            balSut.setCurrentBalance(balSut.getCurrentBalance() + sut.dollarStringToInt(userInput));
+            balSut.setBalance(balSut.getBalance() + sut.dollarStringToInt(userInput));
         }
-        int actual = balSut.getCurrentBalance();
+        int actual = balSut.getBalance();
         int expected = 0;
 
         Assert.assertEquals(expected, actual);
@@ -124,16 +122,16 @@ public class VendingMachineCLITest {
 
     @Test
     public void take_money_should_decline_9000() {
-        balSut.setCurrentBalance(0);
+        balSut.setBalance(0);
         String userInput = "9000";
         if (sut.dollarStringToInt(userInput) < 0){
             System.out.println("Cannot Deposit negative amount");
         } else if (sut.dollarStringToInt(userInput) > 500000) {
             System.out.println("Cannot Deposit more than $5000");
         } else {
-            balSut.setCurrentBalance(balSut.getCurrentBalance() + sut.dollarStringToInt(userInput));
+            balSut.setBalance(balSut.getBalance() + sut.dollarStringToInt(userInput));
         }
-        int actual = balSut.getCurrentBalance();
+        int actual = balSut.getBalance();
         int expected = 0;
 
         Assert.assertEquals(expected, actual);
