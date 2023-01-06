@@ -4,6 +4,7 @@ import com.techelevator.view.Menu;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.List;
 import java.util.Scanner;
 
 public class VendingMachineCLI {
@@ -31,12 +32,15 @@ public class VendingMachineCLI {
         } catch (FileNotFoundException e) {
             System.out.println("Cannot open the input file.");
         }
+
         while (true) {
+            final List<String> itemCodeList = userVendingMachine.getItemCodeList();
+            System.out.println("\n" + "Welcome to Luke's Vending Machine!" + "\n");
+            printStock(userVendingMachine);
+            System.out.printf("%nCurrent Money Provided: $ %s%n", userVendingMachine.dollarIntToString(userVendingMachine.currentBalanceAsStr()));
+
             String choice = (String) userMenu.getChoiceFromOptions(MAIN_MENU_OPTIONS);
-            if (choice.equals(MAIN_MENU_OPTION_DISPLAY_ITEMS)) {
-                userVendingMachine.getItemCodeList();
-                printStock(userVendingMachine);
-            } else if (choice.equals(MAIN_MENU_OPTION_PURCHASE)) {
+            if (choice.equals(MAIN_MENU_OPTION_PURCHASE)) {
                 while (true) {
                     System.out.printf("%nCurrent Money Provided: $ %s%n", userVendingMachine.dollarIntToString(userVendingMachine.currentBalanceAsStr()));
                     String purchaseChoice = (String) userMenu.getChoiceFromOptions(PURCHASING_MENU_OPTIONS);
@@ -44,7 +48,6 @@ public class VendingMachineCLI {
                         System.out.print("Enter dollar bills please: ");
                         userVendingMachine.takeMoney();
                         userVendingMachine.logger("FEED MONEY");
-                        //call log method
                     } else if (purchaseChoice.equals(PURCHASING_MENU_SELECT_PRODUCT)) {
                         printStock(userVendingMachine);
                         while(!userVendingMachine.isValidCode()) {
