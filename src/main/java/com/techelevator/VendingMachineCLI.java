@@ -4,7 +4,6 @@ import com.techelevator.view.Menu;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.List;
 import java.util.Scanner;
 
 public class VendingMachineCLI {
@@ -53,16 +52,16 @@ public class VendingMachineCLI {
                         String selectedCategory = userVendingMachine.getProductsForSale().get(userVendingMachine.getUserItemCode()).getCategory();
                         switch (selectedCategory) {
                             case "Chip":
-                                System.out.println("Crunch Crunch, Yum!");
+                                returnPurchase = ("Crunch Crunch, Yum!");
                                 break;
                             case "Candy":
-                                System.out.println("Munch Munch, Yum!");
+                                returnPurchase = ("Munch Munch, Yum!");
                                 break;
                             case "Drink":
-                                System.out.println("Glug Glug, Yum!");
+                                returnPurchase = ("Glug Glug, Yum!");
                                 break;
                             case "Gum":
-                                System.out.println("Chew Chew, Yum!");
+                                returnPurchase = ("Chew Chew, Yum!");
                                 break;
                         }
                     } else if (userVendingMachine.currentBalanceAsStr() < userVendingMachine.getItemChoicePrice()){
@@ -72,16 +71,16 @@ public class VendingMachineCLI {
                 case FINALISE_TRANSACTION:
                     returnPurchase = " ";
                     userVendingMachine.logger("GIVE CHANGE");
-                    for (int i = 0; i < userVendingMachine.finishTransaction().get(0); i++) {
+                    for (int i = 0; i < userVendingMachine.getChange().get(0); i++) {
                         System.out.println("QUARTER!");
                     }
-                    for (int i = 0; i < userVendingMachine.finishTransaction().get(1); i++) {
+                    for (int i = 0; i < userVendingMachine.getChange().get(1); i++) {
                         System.out.println("DIME!");
                     }
-                    for (int i = 0; i < userVendingMachine.finishTransaction().get(2); i++) {
+                    for (int i = 0; i < userVendingMachine.getChange().get(2); i++) {
                         System.out.println("NICKEL!");
                     }
-                    for (int i = 0; i < userVendingMachine.finishTransaction().get(3); i++) {
+                    for (int i = 0; i < userVendingMachine.getChange().get(3); i++) {
                         System.out.println("PENNY!");
                     }
                     break;

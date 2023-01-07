@@ -71,12 +71,22 @@ public class VendingMachine {
             }
         }
 
-    public List<Integer> finishTransaction() {
-        userBalance.balanceToChange();
+    public List<Integer> getChange() {
+        int currentQuarterBalance = userBalance.getQuarterBalance();
+        int currentDimeBalance = userBalance.getDimeBalance();
+        int currentNickelBalance = userBalance.getNickelBalance();
+        int currentPennyBalance = userBalance.getPennyBalance();
+
         returnChange.add((0), (userBalance.getQuarterBalance()));
         returnChange.add((1), (userBalance.getDimeBalance()));
         returnChange.add((2), (userBalance.getNickelBalance()));
         returnChange.add((3), (userBalance.getPennyBalance()));
+        userBalance.balanceToChange();
+
+        returnChange.set((0), (userBalance.getQuarterBalance() + currentQuarterBalance));
+        returnChange.set((1), (userBalance.getDimeBalance() + currentDimeBalance));
+        returnChange.set((2), (userBalance.getNickelBalance() + currentNickelBalance));
+        returnChange.set((3), (userBalance.getPennyBalance() + currentPennyBalance));
         return returnChange;
     }
 

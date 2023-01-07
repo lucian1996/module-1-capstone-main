@@ -4,33 +4,30 @@ public class Balance {
     private int currentBalance;
     private int quarterBalance;
     private int dimeBalance;
-    private int nickleBalance;
+    private int nickelBalance;
     private int pennyBalance;
-    private int quarter;
-    private int dime;
-    private int nickel;
 
     public void balanceToChange() {
-        quarter = currentBalance / 25;
-        quarterBalance = currentBalance % 25;
+        quarterBalance = currentBalance / 25;
+        currentBalance = currentBalance % 25;
 
-        dime = currentBalance / 10;
-        dimeBalance = currentBalance - quarterBalance % 10;
+        dimeBalance = currentBalance / 10;
+        currentBalance = currentBalance % 10;
 
-        nickel = currentBalance / 5;
-        nickleBalance = currentBalance - quarterBalance - dimeBalance % 5;
+        nickelBalance = currentBalance / 5;
+        currentBalance = currentBalance % 5;
 
-        pennyBalance = currentBalance - quarterBalance - dimeBalance - nickleBalance;
+        pennyBalance = currentBalance;
     }
 
     public int getQuarterBalance() {
-        return quarter;
+        return quarterBalance;
     }
     public int getDimeBalance() {
-        return dime;
+        return dimeBalance;
     }
     public int getNickelBalance() {
-        return nickel;
+        return nickelBalance;
     }
     public int getPennyBalance() {
         return pennyBalance;
