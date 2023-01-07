@@ -57,7 +57,7 @@ public class VendingMachine {
                 isValidCode = false;
             } else {
                 isValidCode = true;
-                if (itemChoice.getItemStock() <= 1) {
+                if (itemChoice.getItemStock() >= 1) {
                     if (userBalance.getBalance() >= itemChoice.getPrice()) {
                         userBalance.setBalance(userBalance.getBalance() - itemChoice.getPrice());
                         itemChoice.setItemStock(itemChoice.getItemStock() - 1);
@@ -73,22 +73,20 @@ public class VendingMachine {
 
     public List<Integer> finishTransaction() {
         userBalance.balanceToChange();
-        returnChange.add(userBalance.getQuarter());
-        returnChange.add(userBalance.getDime());
-        returnChange.add(userBalance.getNickel());
-        returnChange.add(userBalance.getPenny());
+        returnChange.add((0), (userBalance.getQuarterBalance()));
+        returnChange.add((1), (userBalance.getDimeBalance()));
+        returnChange.add((2), (userBalance.getNickelBalance()));
+        returnChange.add((3), (userBalance.getPennyBalance()));
         return returnChange;
     }
 
     public void logger(String action) {
-        String path = "Log.txt";
-        File logFile = new File(path);
         try (PrintWriter logOutput = new PrintWriter(new FileWriter("Log.txt", true))) {
             LocalTime localTime = LocalTime.now();
             DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("hh:mm:ss a");
             //date     time    AM/PM    Feed money/item+item code/Give change    price/transaction     total balance
             String date = String.valueOf(LocalDate.now());
-            String time = String.valueOf(localTime.format(dateTimeFormatter));
+            String time = (localTime.format(dateTimeFormatter));
             switch (action) {
                 case "FEED MONEY":
                     logOutput.append
@@ -139,6 +137,9 @@ public class VendingMachine {
 
     public int getItemChoicePrice() {
         return itemChoice.getPrice();
+    }
+    public int getUserBalance() {
+        return userBalance.getBalance();
     }
     public int currentBalanceAsStr() {
         return userBalance.getBalance();

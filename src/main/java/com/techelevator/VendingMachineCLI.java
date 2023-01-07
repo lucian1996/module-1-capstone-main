@@ -53,16 +53,16 @@ public class VendingMachineCLI {
                         String selectedCategory = userVendingMachine.getProductsForSale().get(userVendingMachine.getUserItemCode()).getCategory();
                         switch (selectedCategory) {
                             case "Chip":
-                                returnPurchase = ("Crunch Crunch, Yum!");
+                                System.out.println("Crunch Crunch, Yum!");
                                 break;
                             case "Candy":
-                                returnPurchase = ("Munch Munch, Yum!");
+                                System.out.println("Munch Munch, Yum!");
                                 break;
                             case "Drink":
-                                returnPurchase = ("Glug Glug, Yum!");
+                                System.out.println("Glug Glug, Yum!");
                                 break;
                             case "Gum":
-                                returnPurchase = ("Chew Chew, Yum!");
+                                System.out.println("Chew Chew, Yum!");
                                 break;
                         }
                     } else if (userVendingMachine.currentBalanceAsStr() < userVendingMachine.getItemChoicePrice()){
