@@ -50,17 +50,22 @@ public class VendingMachineCLI {
                     userVendingMachine.resetIsValidCode();
                     userVendingMachine.logger("ITEM CODE");
                     if (userVendingMachine.isPurchasable()) {
-                        String curCat = userVendingMachine.getProductsForSale().get(userVendingMachine.getUserItemCode()).getCategory();
-                        if (curCat.equals("Chip")) {
-                            returnPurchase = ("Crunch Crunch, Yum!");
-                        } else if (curCat.equals("Candy")) {
-                            returnPurchase = ("Munch Munch, Yum!");
-                        } else if (curCat.equals("Drink")) {
-                            returnPurchase = ("Glug Glug, Yum!");
-                        } else if (curCat.equals("Gum")) {
-                            returnPurchase = ("Chew Chew, Yum!");
+                        String selectedCategory = userVendingMachine.getProductsForSale().get(userVendingMachine.getUserItemCode()).getCategory();
+                        switch (selectedCategory) {
+                            case "Chip":
+                                returnPurchase = ("Crunch Crunch, Yum!");
+                                break;
+                            case "Candy":
+                                returnPurchase = ("Munch Munch, Yum!");
+                                break;
+                            case "Drink":
+                                returnPurchase = ("Glug Glug, Yum!");
+                                break;
+                            case "Gum":
+                                returnPurchase = ("Chew Chew, Yum!");
+                                break;
                         }
-                    } else {
+                    } else if (userVendingMachine.currentBalanceAsStr() < userVendingMachine.getItemChoicePrice()){
                         returnPurchase = ("Insufficient Fund");
                     }
                     break;

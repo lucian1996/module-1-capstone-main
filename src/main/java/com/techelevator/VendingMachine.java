@@ -16,6 +16,7 @@ public class VendingMachine {
     private boolean isValidCode;
     private boolean isPurchasable;
     private String stringDollar;
+    private Product itemChoice;
 
 
     //get data from VendingMachine.csv
@@ -50,7 +51,7 @@ public class VendingMachine {
 
     public void purchaseItem() {
             userItemCode = userInput().toUpperCase();
-            Product itemChoice = productList.get(userItemCode);
+            itemChoice = productList.get(userItemCode);
             if (productList.get(userItemCode) == null) {
                 System.out.println("Invalid Item Code");
                 isValidCode = false;
@@ -136,6 +137,9 @@ public class VendingMachine {
         }
     }
 
+    public int getItemChoicePrice() {
+        return itemChoice.getPrice();
+    }
     public int currentBalanceAsStr() {
         return userBalance.getBalance();
     }
